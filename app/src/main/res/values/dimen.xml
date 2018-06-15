@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="divider_1">1dp</dimen>
+    <dimen name="divider_10">10dp</dimen>
+
+    <dimen name="text_size_16">16sp</dimen>
+
+    <dimen name="section_height">20dp</dimen>
+    <dimen name="section_bottom">16dp</dimen>
+</resources>
