@@ -7,13 +7,14 @@ import android.util.Log;
 
 import com.fb.recyclerviewdemo.BaseActivity;
 import com.fb.recyclerviewdemo.MyBaseAdapter;
-import com.fb.recyclerviewdemo.MyPaddingDecoration;
 import com.fb.recyclerviewdemo.MySectionDecoration;
 import com.fb.recyclerviewdemo.R;
 import com.fb.recyclerviewdemo.entry.Article;
 import com.fb.recyclerviewdemo.entry.ArticleData;
 import com.fb.recyclerviewdemo.entry.HttpResponseSuccess;
+import com.fb.recyclerviewdemo.entry.MyJoke;
 import com.fb.recyclerviewdemo.entry.TagBean;
+import com.fb.recyclerviewdemo.http.HttpMethods;
 import com.fb.recyclerviewdemo.http.HttpService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,6 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -32,10 +37,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.media.CamcorderProfile.get;
 
 /**
  * 玩Android首页文章列表
@@ -95,8 +98,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void loadData() {
         //getHomeData(0);
-        getHomeData2(0);
-        //getHomeData3(0);
+        //getHomeData2(0);
+        getHomeData3(0);
     }
 
     private void setMyAdapter(){
@@ -153,7 +156,7 @@ public class MainActivity extends BaseActivity {
                 // 可以接收自定义的Gson，当然也可以不传
                 .addConverterFactory(GsonConverterFactory.create(gson)) // 支持Gson解析
                 //.addConverterFactory(ProtoConverterFactory.create()) // 支持Prototocobuff解析
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create()) // 支持RxJava
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 支持RxJava
                 .build();
 
         httpService = retrofit.create(HttpService.class);
@@ -178,6 +181,10 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    /**
+     * RxJava 和 RxJava2 通用
+     * @param page
+     */
     private void getHomeData2(int page){
         Call<Article> call = httpService.getArticleData2(page);
         call.enqueue(new Callback<Article>() {
@@ -206,17 +213,86 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    /**
+     * RxJava2 的用法
+     * @param page
+     */
     private void getHomeData3(int page){
-        Call<HttpResponseSuccess<ArticleData>> call = httpService.getArticleData3(page);
-        call.enqueue(new Callback<HttpResponseSuccess<ArticleData>>() {
+        HttpMethods.getInstance().getArticleData3(page, new Observer<Article>() {
+            Disposable d;
+
             @Override
-            public void onResponse(Call<HttpResponseSuccess<ArticleData>> call, Response<HttpResponseSuccess<ArticleData>> response) {
-                Log.e(TAG, "onResponse3: " + response.body().getData().toString() );
+            public void onSubscribe(@NonNull Disposable d) {
+                Log.e(TAG, "onSubscribe: ");
+                this.d = d;
             }
 
             @Override
-            public void onFailure(Call<HttpResponseSuccess<ArticleData>> call, Throwable t) {
-                Log.e(TAG, "onFailure3: " + t.getMessage() );
+            public void onNext(@NonNull Article article) {
+                Log.e(TAG, "onNext: " + article.getErrorCode());
+                if (article != null){
+                    Article.DataBean dataBean = article.getData();
+                    if (dataBean != null){
+                        List<Article.DataBean.DatasBean> datasBeanList = dataBean.getDatas();
+                        setTagData(datasBeanList);
+
+                        mDatas.clear();
+                        mDatas.addAll(datasBeanList);
+
+                        setMyAdapter();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                Log.e(TAG, "onError: " + e.getMessage());
+                d.dispose();
+            }
+
+            @Override
+            public void onComplete() {
+                Log.e(TAG, "onComplete: ");
+                d.dispose();
+            }
+        });
+    }
+
+    /**
+     * RxJava2 的用法
+     * 来福岛笑话
+     */
+    private void getJoke(){
+
+        HttpMethods.getInstance().getJoke(new Observer<List<MyJoke>>() {
+            Disposable d;
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                this.d = d;
+            }
+
+            @Override
+            public void onNext(List<MyJoke> myJokes) {
+//                jokes = myJokes;
+//                adpter = new MyAdpter(myJokes);
+//                LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+//                recyclerView.setLayoutManager(layoutManager);
+//                recyclerView.setAdapter(adpter);
+//                adpter.notifyDataSetChanged();
+                Log.d("MAIN", "获取数据完成" + myJokes.size());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("MAIN", "error" + e.toString());
+                d.dispose();
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d("MAIN", "onComplete");
+                d.dispose();
             }
         });
     }

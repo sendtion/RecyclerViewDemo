@@ -1,12 +1,13 @@
 package com.fb.recyclerviewdemo.http;
 
 import com.fb.recyclerviewdemo.entry.Article;
-import com.fb.recyclerviewdemo.entry.ArticleData;
-import com.fb.recyclerviewdemo.entry.HttpResponseSuccess;
+import com.fb.recyclerviewdemo.entry.MyJoke;
 import com.fb.recyclerviewdemo.entry.User;
 
+import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -42,7 +43,12 @@ public interface HttpService {
     Call<Article> getArticleData2(@Path("page") int page);
 
     @GET("article/list/{page}/json")
-    Call<HttpResponseSuccess<ArticleData>> getArticleData3(@Path("page") int page);
+    Observable<Article> getArticleData3(@Path("page") int page);
+    //Observable<ArticleData> getArticleData3(@Path("page") int page);
+    //Observable<HttpResponseSuccess<ArticleData>> getArticleData3(@Path("page") int page);
+
+    @GET("xiaohua.json")
+    Observable<List<MyJoke>> getJoke();
 
     /**
      * method：网络请求的方法（区分大小写）
