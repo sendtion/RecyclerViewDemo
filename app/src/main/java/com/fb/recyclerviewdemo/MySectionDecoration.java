@@ -9,7 +9,6 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.fb.recyclerviewdemo.entry.TagBean;
@@ -63,7 +62,7 @@ public class MySectionDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
 
         int position = parent.getChildAdapterPosition(view);
-        Log.e(TAG, "getItemOffsets: " + position );
+        //Log.e(TAG, "getItemOffsets: " + position );
 
         String groupId = callback.getGroupId(position);
         if (groupId.equals("-1")) return;

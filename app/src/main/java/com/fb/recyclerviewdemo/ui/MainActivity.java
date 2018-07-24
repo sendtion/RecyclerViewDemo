@@ -4,17 +4,18 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.fb.recyclerviewdemo.BaseActivity;
 import com.fb.recyclerviewdemo.MyBaseAdapter;
 import com.fb.recyclerviewdemo.MySectionDecoration;
 import com.fb.recyclerviewdemo.R;
 import com.fb.recyclerviewdemo.entry.Article;
-import com.fb.recyclerviewdemo.entry.ArticleData;
-import com.fb.recyclerviewdemo.entry.HttpResponseSuccess;
 import com.fb.recyclerviewdemo.entry.MyJoke;
 import com.fb.recyclerviewdemo.entry.TagBean;
+import com.fb.recyclerviewdemo.http.HttpObserver;
 import com.fb.recyclerviewdemo.http.HttpMethods;
+import com.fb.recyclerviewdemo.http.HttpOnNextListener;
 import com.fb.recyclerviewdemo.http.HttpService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -99,7 +99,8 @@ public class MainActivity extends BaseActivity {
     protected void loadData() {
         //getHomeData(0);
         //getHomeData2(0);
-        getHomeData3(0);
+        //getHomeData3(0); //RxJava2用法
+        getHomeData4(0); //对Observer封装
     }
 
     private void setMyAdapter(){
@@ -256,6 +257,33 @@ public class MainActivity extends BaseActivity {
                 d.dispose();
             }
         });
+    }
+
+    private void getHomeData4(int page){
+        HttpOnNextListener<Article> listener = new HttpOnNextListener<Article>() {
+            @Override
+            public void onSuccess(Article article) {
+                Log.e(TAG, "onNext: " + article.getErrorCode());
+                if (article != null){
+                    Article.DataBean dataBean = article.getData();
+                    if (dataBean != null){
+                        List<Article.DataBean.DatasBean> datasBeanList = dataBean.getDatas();
+                        setTagData(datasBeanList);
+
+                        mDatas.clear();
+                        mDatas.addAll(datasBeanList);
+
+                        setMyAdapter();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        HttpMethods.getInstance().getArticleData4(page, new HttpObserver<>(listener));
     }
 
     /**
