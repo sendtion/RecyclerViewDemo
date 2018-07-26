@@ -1,6 +1,7 @@
 package com.fb.recyclerviewdemo.http;
 
 import com.fb.recyclerviewdemo.entry.Article;
+import com.fb.recyclerviewdemo.entry.ArticleData;
 import com.fb.recyclerviewdemo.entry.MyJoke;
 import com.fb.recyclerviewdemo.entry.User;
 
@@ -25,6 +26,7 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
 /**
@@ -45,7 +47,9 @@ public interface HttpService {
     @GET("article/list/{page}/json")
     Observable<Article> getArticleData3(@Path("page") int page);
     //Observable<ArticleData> getArticleData3(@Path("page") int page);
-    //Observable<HttpResponseSuccess<ArticleData>> getArticleData3(@Path("page") int page);
+
+    @GET("article/list/{page}/json")
+    Observable<HttpResponseSuccess<ArticleData>> getArticleData4(@Path("page") int page);
 
     @GET("xiaohua.json")
     Observable<List<MyJoke>> getJoke();
@@ -56,9 +60,11 @@ public interface HttpService {
      * hasBody：是否有请求体
      */
     @HTTP(method = "GET", path = "article/list/{page}/json", hasBody = false)
-    Call<ResponseBody> getArticleData4(@Path("page") int page);
+    Call<ResponseBody> getArticleData5(@Path("page") int page);
     // {id} 表示是一个变量
     // method 的值 retrofit 不会做处理，所以要自行保证准确
+
+    /*****************************************************************************/
 
     // 用户登录
     @POST("user/login")
@@ -82,7 +88,7 @@ public interface HttpService {
     // 1. 使用场景：@Header用于添加不固定的请求头，@Headers用于添加固定的请求头
     // 2. 使用方式：@Header作用于方法的参数；@Headers作用于方法
 
-    /*********************************************************************************/
+    /************************************* 表单格式的请求 **********************************/
 
     /**
      *表明是一个表单格式的请求（Content-Type:application/x-www-form-urlencoded）
@@ -127,7 +133,10 @@ public interface HttpService {
     @GET("/")
     Call<String> cate(@Query("cate") String cate);
     // 其使用方式同 @Field与@FieldMap，这里不作过多描述
+
     // @Query和@QueryMap
+    @GET("/")
+    Call<String> cate2(@QueryMap Map<String, Object> map);
 
     /*********************************************************************************/
 

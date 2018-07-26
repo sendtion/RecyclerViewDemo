@@ -11,6 +11,7 @@ import com.fb.recyclerviewdemo.MyBaseAdapter;
 import com.fb.recyclerviewdemo.MySectionDecoration;
 import com.fb.recyclerviewdemo.R;
 import com.fb.recyclerviewdemo.entry.Article;
+import com.fb.recyclerviewdemo.entry.ArticleData;
 import com.fb.recyclerviewdemo.entry.MyJoke;
 import com.fb.recyclerviewdemo.entry.TagBean;
 import com.fb.recyclerviewdemo.http.HttpObserver;
@@ -283,7 +284,50 @@ public class MainActivity extends BaseActivity {
                 Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
-        HttpMethods.getInstance().getArticleData4(page, new HttpObserver<>(listener));
+        HttpMethods.getInstance().getArticleData4(page, new HttpObserver<>(new HttpOnNextListener<Article>() {
+            @Override
+            public void onSuccess(Article article) {
+                Log.e(TAG, "onNext: " + article.getErrorCode());
+                if (article != null){
+                    Article.DataBean dataBean = article.getData();
+                    if (dataBean != null){
+                        List<Article.DataBean.DatasBean> datasBeanList = dataBean.getDatas();
+                        setTagData(datasBeanList);
+
+                        mDatas.clear();
+                        mDatas.addAll(datasBeanList);
+
+                        setMyAdapter();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }));
+    }
+
+    private void getHomeData5(int page){
+        HttpMethods.getInstance().getArticleData5(page, new HttpObserver<>(new HttpOnNextListener<ArticleData>() {
+            @Override
+            public void onSuccess(ArticleData articleData) {
+                Log.e(TAG, "onNext: " + articleData.getTotal());
+                if (articleData != null){
+                    List<ArticleData.DatasBean> datasBeanList = articleData.getDatas();
+//                    setTagData(datasBeanList);
+//                    mDatas.clear();
+//                    mDatas.addAll(datasBeanList);
+//                    setMyAdapter();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }));
     }
 
     /**
@@ -324,6 +368,8 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+    /*********************************************************************************************************/
 
     // @Header & @Headers
     private void getUser(){

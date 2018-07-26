@@ -1,4 +1,6 @@
-package com.fb.recyclerviewdemo.entry;
+package com.fb.recyclerviewdemo.http;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Description:
@@ -7,8 +9,11 @@ package com.fb.recyclerviewdemo.entry;
  */
 
 public class HttpResponseSuccess<T> {
+    @SerializedName("errorCode")
     private int errorCode;
+    @SerializedName("errorMsg")
     private String errorMsg;
+    @SerializedName("data")
     private T data;
 
     public int getErrorCode() {

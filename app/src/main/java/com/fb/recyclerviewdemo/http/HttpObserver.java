@@ -105,9 +105,7 @@ public class HttpObserver<T> implements Observer<T> {
             onNextListener.onError(e);
         }
 
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
+        toDisposable();
     }
 
     /**
@@ -115,8 +113,16 @@ public class HttpObserver<T> implements Observer<T> {
      */
     @Override
     public void onComplete() {
+        toDisposable();
+    }
+
+    /**
+     * 销毁disposable
+     */
+    private void toDisposable(){
         if (disposable != null && !disposable.isDisposed()) {
             disposable.dispose();
+            disposable = null;
         }
     }
 }
