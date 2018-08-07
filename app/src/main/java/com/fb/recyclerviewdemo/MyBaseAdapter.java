@@ -20,12 +20,39 @@ import java.util.List;
 public class MyBaseAdapter extends RecyclerView.Adapter<MyBaseAdapter.ViewHolder> {
     private List<Article.DataBean.DatasBean> datas;
 
+    private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
+
     public MyBaseAdapter(){
         datas = new ArrayList<>();
     }
 
     public void setDatas(List<Article.DataBean.DatasBean> datas) {
         this.datas = datas;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public interface OnItemLongClickListener{
+        void onItemLongClick(int position);
+    }
+
+    public OnItemClickListener getOnItemClickListener() {
+        return onItemClickListener;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public OnItemLongClickListener getOnItemLongClickListener() {
+        return onItemLongClickListener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
     }
 
     @Override
@@ -45,6 +72,7 @@ public class MyBaseAdapter extends RecyclerView.Adapter<MyBaseAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
+        private View view;
         private TextView tv_item_article_title;
         private TextView tv_item_article_date;
         private TextView tv_item_article_author;
@@ -52,6 +80,7 @@ public class MyBaseAdapter extends RecyclerView.Adapter<MyBaseAdapter.ViewHolder
 
         public ViewHolder(View itemView) {
             super(itemView);
+            this.view = itemView;
 
             tv_item_article_title = (TextView) itemView.findViewById(R.id.tv_item_article_title);
             tv_item_article_date = (TextView) itemView.findViewById(R.id.tv_item_article_date);
@@ -59,13 +88,32 @@ public class MyBaseAdapter extends RecyclerView.Adapter<MyBaseAdapter.ViewHolder
             tv_item_article_classify = (TextView) itemView.findViewById(R.id.tv_item_article_classify);
         }
 
-        public void setData(int position){
+        public void setData(final int position){
             Article.DataBean.DatasBean datasBean = datas.get(position);
 
             tv_item_article_title.setText(datasBean.getTitle());
             tv_item_article_date.setText(datasBean.getNiceDate());
             tv_item_article_author.setText("作者："+datasBean.getAuthor());
             tv_item_article_classify.setText("分类："+datasBean.getChapterName());
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null){
+                        onItemClickListener.onItemClick(position);
+                    }
+                }
+            });
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (onItemLongClickListener != null){
+                        onItemLongClickListener.onItemLongClick(position);
+                    }
+                    return false;
+                }
+            });
         }
     }
 }

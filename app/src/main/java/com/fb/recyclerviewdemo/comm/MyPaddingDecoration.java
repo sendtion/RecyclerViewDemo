@@ -1,9 +1,11 @@
-package com.fb.recyclerviewdemo;
+package com.fb.recyclerviewdemo.comm;
 
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.fb.recyclerviewdemo.R;
 
 /**
  * Description: 通过ItemDecoration模拟Padding效果，如果只设置底部divider，可实现分割线效果

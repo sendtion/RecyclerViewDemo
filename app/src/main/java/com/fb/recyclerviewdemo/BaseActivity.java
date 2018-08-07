@@ -45,11 +45,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         StatusBarUtil.setStatusTextColor(true, this);
     }
 
-    protected abstract void loadData();
+    protected abstract void initView();
 
     protected abstract void initData();
 
-    protected abstract void initView();
+    protected abstract void loadData();
 
     public void showToastShort(String text){
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();

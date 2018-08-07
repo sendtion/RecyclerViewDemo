@@ -1,5 +1,6 @@
 package com.fb.recyclerviewdemo.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,14 +9,14 @@ import android.widget.Toast;
 
 import com.fb.recyclerviewdemo.BaseActivity;
 import com.fb.recyclerviewdemo.MyBaseAdapter;
-import com.fb.recyclerviewdemo.MySectionDecoration;
 import com.fb.recyclerviewdemo.R;
+import com.fb.recyclerviewdemo.comm.MySectionDecoration;
 import com.fb.recyclerviewdemo.entry.Article;
 import com.fb.recyclerviewdemo.entry.ArticleData;
 import com.fb.recyclerviewdemo.entry.MyJoke;
 import com.fb.recyclerviewdemo.entry.TagBean;
-import com.fb.recyclerviewdemo.http.HttpObserver;
 import com.fb.recyclerviewdemo.http.HttpMethods;
+import com.fb.recyclerviewdemo.http.HttpObserver;
 import com.fb.recyclerviewdemo.http.HttpOnNextListener;
 import com.fb.recyclerviewdemo.http.HttpService;
 import com.google.gson.Gson;
@@ -132,6 +133,28 @@ public class MainActivity extends BaseActivity {
         baseAdapter = new MyBaseAdapter();
         baseAdapter.setDatas(mDatas);
         mListArticle.setAdapter(baseAdapter);
+
+        baseAdapter.setOnItemClickListener(new MyBaseAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Article.DataBean.DatasBean datasBean = mDatas.get(position);
+                String projectLink = datasBean.getProjectLink();
+                String link = datasBean.getLink();
+
+                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+                intent.putExtra("link", link);
+                intent.putExtra("projectLink", projectLink);
+                startActivity(intent);
+            }
+        });
+
+        baseAdapter.setOnItemLongClickListener(new MyBaseAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(int position) {
+                Article.DataBean.DatasBean datasBean = mDatas.get(position);
+                showToastShort(datasBean.getTitle());
+            }
+        });
     }
 
     private void setTagData(List<Article.DataBean.DatasBean> datas){
