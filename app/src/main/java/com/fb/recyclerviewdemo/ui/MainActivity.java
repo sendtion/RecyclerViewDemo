@@ -8,7 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.fb.recyclerviewdemo.BaseActivity;
-import com.fb.recyclerviewdemo.MyBaseAdapter;
+import com.fb.recyclerviewdemo.adapter.MyBaseAdapter;
 import com.fb.recyclerviewdemo.R;
 import com.fb.recyclerviewdemo.comm.MySectionDecoration;
 import com.fb.recyclerviewdemo.entry.Article;
@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity {
                 String projectLink = datasBean.getProjectLink();
                 String link = datasBean.getLink();
 
-                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+                Intent intent = new Intent(MainActivity.this, ArticleActivity.class);
                 intent.putExtra("link", link);
                 intent.putExtra("projectLink", projectLink);
                 startActivity(intent);

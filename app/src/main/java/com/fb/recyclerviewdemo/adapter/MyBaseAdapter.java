@@ -1,4 +1,4 @@
-package com.fb.recyclerviewdemo;
+package com.fb.recyclerviewdemo.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.fb.recyclerviewdemo.R;
 import com.fb.recyclerviewdemo.entry.Article;
 
 import java.util.ArrayList;

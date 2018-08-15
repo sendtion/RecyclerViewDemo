@@ -1,6 +1,6 @@
 package com.fb.recyclerviewdemo.http;
 
-import com.fb.recyclerviewdemo.MyApplication;
+import com.fb.recyclerviewdemo.app.MyApplication;
 import com.fb.recyclerviewdemo.entry.Article;
 import com.fb.recyclerviewdemo.entry.ArticleData;
 import com.fb.recyclerviewdemo.entry.MyJoke;

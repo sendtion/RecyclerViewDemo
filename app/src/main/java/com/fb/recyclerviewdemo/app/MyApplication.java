@@ -1,4 +1,4 @@
-package com.fb.recyclerviewdemo;
+package com.fb.recyclerviewdemo.app;
 
 import android.app.Application;
 

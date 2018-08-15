@@ -47,9 +47,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void initView();
 
-    protected abstract void initData();
+    protected void initData(){
 
-    protected abstract void loadData();
+    }
+
+    protected void loadData(){
+
+    }
 
     public void showToastShort(String text){
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();

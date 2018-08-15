@@ -25,6 +25,7 @@ import com.prim.primweb.core.webview.IAgentWebView;
 
 /**
  * 加载网页
+ * https://github.com/JakePrim/PrimWeb
  */
 public class WebViewActivity extends BaseActivity{
     private static final String TAG = "@@@@@@";
@@ -77,11 +78,6 @@ public class WebViewActivity extends BaseActivity{
                     .launch(link);
 
         }
-    }
-
-    @Override
-    protected void loadData() {
-
     }
 
     @Override
